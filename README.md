@@ -207,6 +207,13 @@ The yum module installs Nginx and the PHP packages specified in the variable php
 
 The template module copies the nginx.conf.j2 template to /etc/nginx/nginx.conf and triggers the Nginx restart handler.
 
+# Ansible playbook installed nginx on multple hosts:
+
+<img width="406" alt="ngn" src="https://github.com/user-attachments/assets/a763b3d3-0c1d-42b0-b693-a3921842bee1">
+
+
+<img width="231" alt="ngin" src="https://github.com/user-attachments/assets/dd596a98-34e4-475f-90ca-4ad497347d52">
+
 Deploy PHP Info Page:
 
 The copy module places the info.php file in Nginx's web root (/usr/share/nginx/html/) for testing PHP functionality.
