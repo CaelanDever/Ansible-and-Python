@@ -98,8 +98,8 @@ This is the main playbook file that includes all the tasks.
 
     - name: Deploy PHP info page
       copy:
-        src: files/info.php
-        dest: /usr/share/nginx/html/info.php
+        src: files/phpinfo.php
+        dest: /usr/share/nginx/html/phpinfo.php
         mode: '0644'
 
     - name: Start and enable Nginx
@@ -165,12 +165,12 @@ http {
         root /usr/share/nginx/html;
 
         location / {
-            index index.php index.html index.htm;
+            index phpinfo.php index.html index.htm;
         }
 
         location ~ \.php$ {
             fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index index.php;
+            fastcgi_index phpinfo.php;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
             include fastcgi_params;
         }
@@ -181,7 +181,7 @@ http {
         }
     }
 }
-3. info.php
+3. phpinfo.php
 This is a simple PHP info page to verify the PHP setup.
 
 
@@ -223,7 +223,7 @@ The template module copies the nginx.conf.j2 template to /etc/nginx/nginx.conf a
 
 Deploy PHP Info Page:
 
-The copy module places the info.php file in Nginx's web root (/usr/share/nginx/html/) for testing PHP functionality.
+The copy module places the phpinfo.php file in Nginx's web root (/usr/share/nginx/html/) for testing PHP functionality.
 Start and Enable Services:
 
 <img width="74" alt="456" src="https://github.com/user-attachments/assets/af8d623c-ec6a-4de4-a706-ab889b548df1">
@@ -268,7 +268,7 @@ Nginx and PHP Installed: The playbook installs and configures Nginx and PHP (wit
 <img width="452" alt="csaas" src="https://github.com/user-attachments/assets/fa18b7c1-815f-4edf-846c-2fceadc07e7c">
 
 
-PHP Info Page: A PHP info page is deployed and accessible via http://<server_ip>/info.php.
+PHP Info Page: A PHP info page is deployed and accessible via http://<server_ip>/phpinfo.php.
 
 
 <img width="791" alt="php" src="https://github.com/user-attachments/assets/4e8947c7-8672-41d4-bc22-23aaa9d6eb00">
