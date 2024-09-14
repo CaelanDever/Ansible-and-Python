@@ -410,5 +410,13 @@ After the script is ran:
 
 <img width="480" alt="a4" src="https://github.com/user-attachments/assets/eaa15053-51dd-4092-915b-ab4383a507b4">
 
+Lets run scripte AGAIN and see if it works again:
+
+
+
+<img width="586" alt="ag" src="https://github.com/user-attachments/assets/f340f361-96f7-462b-ab64-1a5d2617cd49">
+
+# I have demonstrated that as long as the script keeps running it will create backup files from all contents in the /path/to/directory1 and /path/to/directory2
+
 
 
