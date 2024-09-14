@@ -21,6 +21,9 @@ cd Python-3.12.0
 sudo make altinstall
 Install Ansible after installing Python 3.12:
 
+<img width="452" alt="kn" src="https://github.com/user-attachments/assets/d6bb948f-48f0-48e7-9db7-487f82090439">
+
+
 Update alternatives to use Python 3.12 as the default:
 
 
@@ -31,6 +34,18 @@ sudo dnf install ansible
 Here's a complete Ansible playbook for automating the setup of a web server environment using Nginx and PHP on CentOS servers:
 
 <img width="455" alt="kkk" src="https://github.com/user-attachments/assets/88df9d8e-ff84-469f-8cdc-ef338d1bfc64">
+
+
+<img width="451" alt="4321" src="https://github.com/user-attachments/assets/42068ca0-dc91-4f01-8e17-e2c2d61f8542">
+
+
+# Edit ansible hosts file to add other hosts with the ssh keygen:  
+
+<img width="450" alt="cdd" src="https://github.com/user-attachments/assets/301cca0e-fdbb-4647-b9c0-353e9b27ce97">
+
+
+<img width="425" alt="dsaa" src="https://github.com/user-attachments/assets/ff8998af-6d7c-4982-bb2a-44f9414b1384">
+
 
 # Directory Structure
 For ease of use, let's assume your playbook files will be organized like this:
