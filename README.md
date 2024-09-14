@@ -139,6 +139,10 @@ This is the main playbook file that includes all the tasks.
         state: restarted
 
 # 2. nginx.conf.j2
+
+<img width="342" alt="76" src="https://github.com/user-attachments/assets/2af6a8be-d76f-457f-be2f-5eb9cb0fb022">
+
+
 This template configures Nginx to serve PHP files.
 
 user nginx;
@@ -187,13 +191,22 @@ phpinfo();
 ?>
 
 # Breakdown of the Playbook
+
 Install Nginx and PHP:
 
 The yum module installs Nginx and the PHP packages specified in the variable php_packages.
 
+<img width="369" alt="57" src="https://github.com/user-attachments/assets/43e3d53f-4877-4fa4-9a4c-d81e1a995d16">
+
+<img width="446" alt="31" src="https://github.com/user-attachments/assets/0dad8a49-4ef0-4b9a-9e1d-ec476c96cbb1">
+
+
+<img width="453" alt="97" src="https://github.com/user-attachments/assets/382ae914-976a-4985-838d-380d09481994">
+
 # Configure Nginx:
 
 The template module copies the nginx.conf.j2 template to /etc/nginx/nginx.conf and triggers the Nginx restart handler.
+
 Deploy PHP Info Page:
 
 The copy module places the info.php file in Nginx's web root (/usr/share/nginx/html/) for testing PHP functionality.
@@ -204,6 +217,7 @@ The service module ensures Nginx and PHP-FPM are started and enabled on boot.
 # Configure Firewall:
 
 The firewalld module enables HTTP (port 80) traffic on the system's firewall.
+
 Error Handling and Notifications:
 
 The playbook uses handlers to restart Nginx and PHP-FPM when their configuration changes.
@@ -222,9 +236,13 @@ To execute the playbook, use the following command:
 
 ansible-playbook -i hosts playbook.yml
 
+
 # Completion Criteria
 
 Nginx and PHP Installed: The playbook installs and configures Nginx and PHP (with required extensions).
+
+<img width="452" alt="csaas" src="https://github.com/user-attachments/assets/fa18b7c1-815f-4edf-846c-2fceadc07e7c">
+
 
 PHP Info Page: A PHP info page is deployed and accessible via http://<server_ip>/info.php.
 
