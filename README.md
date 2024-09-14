@@ -7,6 +7,221 @@
 #### Description:
 Write an Ansible playbook to automate the setup of a web server environment using Nginx and PHP on multiple CentOS servers. The playbook should install and configure Nginx as the web server and PHP for dynamic content processing. Additionally, configure a basic PHP info page for testing purposes. Test the playbook on a test environment to verify its functionality.
 
+
+Install Python 3.12 manually and then install Ansible
+Install Python 3.12 manually by building it from source:
+
+
+sudo dnf groupinstall "Development Tools"
+sudo dnf install wget bzip2-devel libffi-devel zlib-devel xz-devel openssl-devel
+wget https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz
+tar -xf Python-3.12.0.tgz
+cd Python-3.12.0
+./configure --enable-optimizations
+sudo make altinstall
+Install Ansible after installing Python 3.12:
+
+Update alternatives to use Python 3.12 as the default:
+
+
+sudo alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.12 1
+Then, try installing Ansible again:
+
+sudo dnf install ansible
+Here's a complete Ansible playbook for automating the setup of a web server environment using Nginx and PHP on CentOS servers:
+
+<img width="455" alt="kkk" src="https://github.com/user-attachments/assets/88df9d8e-ff84-469f-8cdc-ef338d1bfc64">
+
+# Directory Structure
+For ease of use, let's assume your playbook files will be organized like this:
+
+├── playbook.yml
+├── templates
+│   └── nginx.conf.j2
+└── files
+    └── info.php
+
+Step-by-Step Ansible Playbook
+
+# 1. playbook.yml
+This is the main playbook file that includes all the tasks.
+
+---
+- name: Setup Nginx and PHP Web Server Environment
+  hosts: web_servers
+  become: yes
+  vars:
+    php_packages:
+      - php
+      - php-fpm
+      - php-mysql
+      - php-cli
+      - php-common
+      - php-xml
+      - php-json
+      - php-mbstring
+    firewalld_services:
+      - http
+
+  tasks:
+    - name: Ensure Nginx and PHP-FPM are installed
+      yum:
+        name:
+          - nginx
+          - "{{ php_packages }}"
+        state: present
+      notify:
+        - restart nginx
+        - restart php-fpm
+
+    - name: Create Nginx configuration file from template
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify:
+        - restart nginx
+
+    - name: Deploy PHP info page
+      copy:
+        src: files/info.php
+        dest: /usr/share/nginx/html/info.php
+        mode: '0644'
+
+    - name: Start and enable Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Start and enable PHP-FPM
+      service:
+        name: php-fpm
+        state: started
+        enabled: true
+
+    - name: Configure firewalld to allow HTTP traffic
+      firewalld:
+        service: "{{ firewalld_services }}"
+        permanent: yes
+        state: enabled
+        immediate: yes
+
+    - name: Ensure firewalld is running and enabled on boot
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+    - name: restart php-fpm
+      service:
+        name: php-fpm
+        state: restarted
+
+# 2. nginx.conf.j2
+This template configures Nginx to serve PHP files.
+
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    sendfile on;
+    keepalive_timeout 65;
+    server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+
+        location / {
+            index index.php index.html index.htm;
+        }
+
+        location ~ \.php$ {
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            include fastcgi_params;
+        }
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+            root /usr/share/nginx/html;
+        }
+    }
+}
+3. info.php
+This is a simple PHP info page to verify the PHP setup.
+
+php
+Copy code
+<?php
+phpinfo();
+?>
+
+# Breakdown of the Playbook
+Install Nginx and PHP:
+
+The yum module installs Nginx and the PHP packages specified in the variable php_packages.
+
+# Configure Nginx:
+
+The template module copies the nginx.conf.j2 template to /etc/nginx/nginx.conf and triggers the Nginx restart handler.
+Deploy PHP Info Page:
+
+The copy module places the info.php file in Nginx's web root (/usr/share/nginx/html/) for testing PHP functionality.
+Start and Enable Services:
+
+The service module ensures Nginx and PHP-FPM are started and enabled on boot.
+
+# Configure Firewall:
+
+The firewalld module enables HTTP (port 80) traffic on the system's firewall.
+Error Handling and Notifications:
+
+The playbook uses handlers to restart Nginx and PHP-FPM when their configuration changes.
+Testing the Playbook
+
+After creating the playbook and its associated files, you can test it by running the playbook on your CentOS servers. Ensure you have a group [web_servers] defined in your hosts inventory file.
+
+Sample Inventory File (hosts)
+
+[web_servers]
+server1.example.com
+server2.example.com
+
+# Run the Playbook
+To execute the playbook, use the following command:
+
+ansible-playbook -i hosts playbook.yml
+
+# Completion Criteria
+
+Nginx and PHP Installed: The playbook installs and configures Nginx and PHP (with required extensions).
+
+PHP Info Page: A PHP info page is deployed and accessible via http://<server_ip>/info.php.
+
+Service Configuration: Nginx and PHP-FPM services are enabled and running.
+
+Firewall Configured: Firewalld is configured to allow HTTP traffic.
+
+Error Handling: If a package installation fails or service doesn't start, the playbook will gracefully handle those errors by retrying or stopping execution with an appropriate message.
+
+This playbook should fulfill the task of setting up a web server environment across multiple CentOS servers.
+
+
 # Python ==============
 
 # Task: Python Script for Automated File Backup
@@ -23,6 +238,11 @@ Detailed Step-by-Step Explanation
 
 # Step 1: Define Files and Directories to Back Up
 In the files_to_backup list, we specify both files and directories that need to be backed up. This can include paths to any files and folders. For example: Pic is shown after step 2
+
+# These are files that I made to be tested with the script:
+
+<img width="331" alt="ee" src="https://github.com/user-attachments/assets/bcf0ab29-7c13-4847-be14-a029d16e5345">
+
 
 This will enable the script to traverse directories recursively and back up all files within those directories.
 
@@ -178,6 +398,17 @@ if __name__ == "__main__":
 
 
 
+# RESULTS:
+
+Backup location before script is ran: None of the files I made above are there yet:
+
+
+<img width="437" alt="b4" src="https://github.com/user-attachments/assets/1333ea3e-7b7c-4b60-97b9-b5d49f367192">
+
+After the script is ran:
+
+
+<img width="480" alt="a4" src="https://github.com/user-attachments/assets/eaa15053-51dd-4092-915b-ab4383a507b4">
 
 
 
