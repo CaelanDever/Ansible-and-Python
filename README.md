@@ -184,11 +184,14 @@ http {
 3. info.php
 This is a simple PHP info page to verify the PHP setup.
 
-php
-Copy code
+
 <?php
 phpinfo();
 ?>
+
+
+<img width="75" alt="78" src="https://github.com/user-attachments/assets/2536e9d0-84bf-4642-9691-6932dd2cff08">
+
 
 # Breakdown of the Playbook
 
@@ -209,6 +212,10 @@ The template module copies the nginx.conf.j2 template to /etc/nginx/nginx.conf a
 
 # Ansible playbook installed nginx on multple hosts:
 
+
+<img width="426" alt="Capture" src="https://github.com/user-attachments/assets/21b7501e-272e-4de8-a577-def702f117fb">
+
+
 <img width="406" alt="ngn" src="https://github.com/user-attachments/assets/a763b3d3-0c1d-42b0-b693-a3921842bee1">
 
 
@@ -219,11 +226,21 @@ Deploy PHP Info Page:
 The copy module places the info.php file in Nginx's web root (/usr/share/nginx/html/) for testing PHP functionality.
 Start and Enable Services:
 
+<img width="74" alt="456" src="https://github.com/user-attachments/assets/af8d623c-ec6a-4de4-a706-ab889b548df1">
+
+<img width="317" alt="677" src="https://github.com/user-attachments/assets/d78c53c9-3e56-4d51-b6c0-9a91579739d7">
+
+
+
 The service module ensures Nginx and PHP-FPM are started and enabled on boot.
 
 # Configure Firewall:
 
 The firewalld module enables HTTP (port 80) traffic on the system's firewall.
+
+
+<img width="457" alt="fww" src="https://github.com/user-attachments/assets/7612bf71-c219-4e51-9080-8ca705f93fe0">
+
 
 Error Handling and Notifications:
 
