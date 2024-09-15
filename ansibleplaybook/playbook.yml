@@ -38,8 +38,8 @@
 
     - name: Deploy PHP info page
       copy:
-        src: files/info.php
-        dest: /usr/share/nginx/html/info.php
+        src: files/phpinfo.php
+        dest: /usr/share/nginx/html/phpinfo.php
         mode: '0644'
 
     - name: Start and enable Nginx
