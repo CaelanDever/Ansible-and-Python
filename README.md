@@ -251,7 +251,7 @@ Nginx and PHP Installed: The playbook installs and configures Nginx and PHP (wit
 PHP Info Page: A PHP info page is deployed and accessible via http://<server_ip>/phpinfo.php.
 
 
-<img width="789" alt="phpi" src="https://github.com/user-attachments/assets/0c23f567-457a-4265-b61b-790f1cb7e0c7">
+![photo_2024-09-15_02-13-45](https://github.com/user-attachments/assets/60d43375-9377-46a1-a7f8-0c259b129bc7)
 
 
 Service Configuration: Nginx and PHP-FPM services are enabled and running.
