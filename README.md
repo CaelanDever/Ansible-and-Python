@@ -79,73 +79,7 @@ This is the main playbook file that includes all the tasks.
       - http
 
   tasks:
-    - name: Ensure Nginx and PHP-FPM are installed
-      yum:
-        name:
-          - nginx
-          - "{{ php_packages }}"
-        state: present
-      notify:
-        - restart nginx
-        - restart php-fpm
-
-    - name: Create Nginx configuration file from template
-      template:
-        src: templates/nginx.conf.j2
-        dest: /etc/nginx/nginx.conf
-      notify:
-        - restart nginx
-
-    - name: Deploy PHP info page
-      copy:
-        src: files/phpinfo.php
-        dest: /usr/share/nginx/html/phpinfo.php
-        mode: '0644'
-
-    - name: Start and enable Nginx
-      service:
-        name: nginx
-        state: started
-        enabled: true
-
-    - name: Start and enable PHP-FPM
-      service:
-        name: php-fpm
-        state: started
-        enabled: true
-
-    - name: Configure firewalld to allow HTTP traffic
-      firewalld:
-        service: "{{ firewalld_services }}"
-        permanent: yes
-        state: enabled
-        immediate: yes
-
-    - name: Ensure firewalld is running and enabled on boot
-      service:
-        name: firewalld
-        state: started
-        enabled: true
-
-  handlers:
-    - name: restart nginx
-      service:
-        name: nginx
-        state: restarted
-
-    - name: restart php-fpm
-      service:
-        name: php-fpm
-        state: restarted
-
-# 2. nginx.conf.j2
-
-<img width="342" alt="76" src="https://github.com/user-attachments/assets/2af6a8be-d76f-457f-be2f-5eb9cb0fb022">
-
-
-This template configures Nginx to serve PHP files.
-
-user nginx;
+    user nginx;
 worker_processes auto;
 error_log /var/log/nginx/error.log;
 pid /run/nginx.pid;
@@ -159,20 +93,21 @@ http {
     default_type application/octet-stream;
     sendfile on;
     keepalive_timeout 65;
+    
     server {
         listen 80;
         server_name localhost;
         root /usr/share/nginx/html;
 
         location / {
-            index phpinfo.php index.html index.htm;
+            index index.php index.html index.htm;
         }
 
         location ~ \.php$ {
-            fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index phpinfo.php;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
             include fastcgi_params;
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         }
 
         error_page 500 502 503 504 /50x.html;
@@ -181,6 +116,51 @@ http {
         }
     }
 }
+
+
+# 2. nginx.conf.j2
+
+<img width="342" alt="76" src="https://github.com/user-attachments/assets/2af6a8be-d76f-457f-be2f-5eb9cb0fb022">
+
+
+Tuser nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    sendfile on;
+    keepalive_timeout 65;
+    
+    server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+
+        location / {
+            index index.php index.html index.htm;
+        }
+
+        location ~ \.php$ {
+            include fastcgi_params;
+            fastcgi_pass 127.0.0.1:9000;  # Adjust if PHP-FPM is using a different socket or port
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+            root /usr/share/nginx/html;
+        }
+    }
+}
+
 3. phpinfo.php
 This is a simple PHP info page to verify the PHP setup.
 
